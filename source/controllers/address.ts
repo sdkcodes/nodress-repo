@@ -66,8 +66,39 @@ export const createAddress = async(req: Request, res: Response, next: NextFuncti
 }
 
 export const updateAddress = async (req: Request, res: Response, next: NextFunction) => {
-
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ message: "The given data is invalid", errors: errors.array() });
+    }
     let id = req.params.id;
+    let body = req.body;
+
+    const AddressSchema = dbClient.model('Address', addressSchema);
+
+    let address = await AddressSchema.findById(id);
+    if (address == null) {
+        return res.status(404).json({
+            'status': 'error',
+            'message': "The address with the specified id could not be found."
+        })
+    }
+    if (['not interested', 'interested'].includes(address.status)){
+        return res.status(403).json({
+            status: 'error',
+            message: 'The address can not be updated when current status is either `interested` or `not interested`'
+        });
+    }
+
+    address.status = body.status;
+    address.name = body.name;
+    address.email = body.email;
+    address = await address.save();
+
+    return res.status(200).json({
+        status: 'success',
+        message: "Address updated successfully",
+        data: address
+    });
 }
 
 export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
