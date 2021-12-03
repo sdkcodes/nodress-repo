@@ -1,9 +1,12 @@
+require('dotenv').config()
+
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import routes from './routes/address';
 
 const router: Express = express();
+
 
 /** Logging */
 router.use(morgan('dev'));

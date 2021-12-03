@@ -1,7 +1,11 @@
 let mongoose = require('mongoose');
 
-//todo get db password and name from environment
-const uri = "mongodb+srv://sdk:omoelu@cluster0.2ny0b.mongodb.net/addresses_db?retryWrites=true&w=majority";
+let host = process.env.DB_HOST;
+let username = process.env.DB_USERNAME;
+let password = process.env.DB_PASSWORD;
+let database = process.env.DB_DATABASE;
+
+const uri = `mongodb+srv://${username}:${password}@${host}/${database}?retryWrites=true&w=majority`;
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 export let client = mongoose.connection;

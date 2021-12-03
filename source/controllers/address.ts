@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Address, Address as AddressModel, addressSchema } from "../models/address";
 import { client as dbClient } from "../db/connection";
 const { validationResult } = require('express-validator');
+import {generateUrl} from "../helpers/utils";
 
 var ObjectId = require('mongoose').ObjectID;
 
@@ -19,6 +20,7 @@ export const getAddresses = async(req: Request, res: Response, next: NextFunctio
 }
 
 export const getAddress = async(req: Request, res: Response, next: NextFunction) => {
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ message: "The given data is invalid", errors: errors.array() });
@@ -55,9 +57,9 @@ export const createAddress = async(req: Request, res: Response, next: NextFuncti
     const AddressSchema = dbClient.model('Address', addressSchema);
     const addressModel = new AddressSchema(body);
     
-    await addressModel.save();
+    let address = await addressModel.save();
     
-    return res.status(201).json({
+    return res.location(generateUrl(address._id)).status(201).json({
         status: 'success',
         message: 'Address created successfully',
         data: addressModel
