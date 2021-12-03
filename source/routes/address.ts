@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { param, body, validationResult } from "express-validator";
-import { createAddress, getAddress, getAddresses, updateAddress } from "../controllers/address";
+import { createAddress, deleteAddress, getAddress, getAddresses, updateAddress } from "../controllers/address";
 
 const router = Router();
 const allowed_statuses = ['not at home', 'not interested', 'interested'];
@@ -33,6 +33,13 @@ router.patch('/address/:id',
         body('email').notEmpty().withMessage("Email is required").isEmail().withMessage("A valid email format is required"),
     ],
     updateAddress
+);
+
+router.delete('/address/:id',
+    [
+        param('id').isMongoId().withMessage("The specified ID must be a  valid hex-encoded representation of a MongoDB ObjectId")
+    ],
+    deleteAddress
 );
 
 export = router;

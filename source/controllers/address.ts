@@ -102,6 +102,29 @@ export const updateAddress = async (req: Request, res: Response, next: NextFunct
 }
 
 export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
-    let id = req.params.id;
     
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ message: "The given data is invalid", errors: errors.array() });
+    }
+    let id = req.params.id;
+
+    const AddressSchema = dbClient.model('Address', addressSchema);
+
+    let address = await AddressSchema.findById(id);
+    if (address == null) {
+        return res.status(404).json({
+            'status': 'error',
+            'message': "The address with the specified id could not be found."
+        })
+    }
+
+    let deleteQuery = await AddressSchema.findOneAndDelete({ _id: id });
+    if (deleteQuery){
+        return res.status(200).json()
+    }
+    return res.status(409).json({
+        status: 'error',
+        message: "Unable to complete your request at this time"
+    });
 }
