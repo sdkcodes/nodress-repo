@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 export interface Address {
-    id?: String;
+    _id?: String|string|null;
     country: String;
     city: String;
     street: String;
@@ -11,16 +11,15 @@ export interface Address {
     numberAddition?: String;
     createdAt?: String;
     updatedAt?: String;
-    status?: String|null;
-    name?: String|null;
-    email?: String|null;
+    status?: String|string|null;
+    name?: String|string|null;
+    email?: String|string|null;
 }
 
 const {Schema} = mongoose;
 
-export const addressSchema = new Schema(
+export const addressSchema = new Schema<Address>(
     {
-        id: String,
         country: String,
         city: String,
         street: String,
