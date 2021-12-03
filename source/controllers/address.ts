@@ -19,6 +19,10 @@ export const getAddresses = async(req: Request, res: Response, next: NextFunctio
 }
 
 export const getAddress = async(req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ message: "The given data is invalid", errors: errors.array() });
+    }
     let id = req.params.id;
 
     const AddressSchema = dbClient.model('Address', addressSchema);
@@ -47,7 +51,7 @@ export const createAddress = async(req: Request, res: Response, next: NextFuncti
     body.status = null;
     body.name = null;
     body.email = null;
-    
+
     const AddressSchema = dbClient.model('Address', addressSchema);
     const addressModel = new AddressSchema(body);
     
