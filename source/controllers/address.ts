@@ -52,7 +52,17 @@ export const getAddress = async(req: Request, res: Response, next: NextFunction)
 
 }
 
-// export const createAddress = async(req: Request, res: Response, next: NextFunction) => {
+export const createAddress = async(req: Request, res: Response, next: NextFunction) => {
 
-//     let body = req.body;
-// }
+    let body = req.body;
+}
+
+export const updateAddress = async (req: Request, res: Response, next: NextFunction) => {
+
+    let id = req.params.id;
+}
+
+export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.params.id;
+    
+}
