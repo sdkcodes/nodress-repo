@@ -5,7 +5,7 @@
   "main": "source/server.ts",
   "scripts": {
     "dev": "nodemon source/server.ts",
-    "build": "rm -rf build/ && prettier --write source/ && tsc",
+    "build": "rm -rf build/ && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sodeeq Elusoji <omoelu1@gmail.com>",
