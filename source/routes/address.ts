@@ -1,16 +1,42 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { param, body, validationResult } from "express-validator";
 import { createAddress, deleteAddress, getAddress, getAddresses, updateAddress } from "../controllers/address";
 
 const router = Router();
 const allowed_statuses = ['not at home', 'not interested', 'interested'];
 
+var cache = require('memory-cache');
+
+let cache_ware = (req: any, res: any, next: any) => {
+    let id = req.params.id;
+    let cached_address = cache.get(id);
+    
+    if (cached_address){
+        let client_last_modified_date = new Date(req.header('If-Modified-Since'));
+        let cached_last_updated_date = new Date(cached_address.updatedAt);
+        if (cached_last_updated_date <= client_last_modified_date){
+            
+            //we can more appropriately send a 304 status here to indeed show that item has not been modified
+            return res.status(200).json({
+                status: 'success',
+                data: cached_address,
+                message: 'Sent from cache'
+            })
+        }else{
+            next();
+        }
+    }else{
+        next();
+    }
+    
+}
 router.get('/address', getAddresses);
 router.get(
     '/address/:id',
     [
         param('id').isMongoId().withMessage("The specified ID must be a  valid hex-encoded representation of a MongoDB ObjectId")
     ],
+    cache_ware,
     getAddress
 );
 router.post('/address',

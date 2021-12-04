@@ -9,8 +9,8 @@ export interface Address {
     postalcode: String;
     number: Number;
     numberAddition?: String;
-    createdAt?: String;
-    updatedAt?: String;
+    createdAt?: string;
+    updatedAt?: string;
     status?: String|string|null;
     name?: String|string|null;
     email?: String|string|null;

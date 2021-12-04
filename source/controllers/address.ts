@@ -8,6 +8,7 @@ import { ModelNotFoundException } from "../exceptions/ModelNotFoundException";
 import { ForbiddenActionException } from "../exceptions/ForbiddenActionException";
 
 var ObjectId = require('mongoose').ObjectID;
+var cache = require('memory-cache');
 
 export const getAddresses = async(req: Request, res: Response, next: NextFunction) => {
     
@@ -40,7 +41,9 @@ export const getAddress = async(req: Request, res: Response, next: NextFunction)
         })
     }
     
-    return res.status(200).json({
+    cache.put(address._id, address);
+    
+    return res.set('Last-Modified', address.updatedAt).status(200).json({
         status: 'success',
         message: "Address retrieved successfully",
         data: address
@@ -54,14 +57,6 @@ export const createAddress = async(req: Request, res: Response, next: NextFuncti
         return res.status(422).json({ message: "The given data is invalid", errors: errors.array() });
     }
     let body = req.body;
-    // body.status = null;
-    // body.name = null;
-    // body.email = null;
-
-    // const AddressSchema = dbClient.model('Address', addressSchema);
-    // const addressModel = new AddressSchema(body);
-    
-    // let address = await addressModel.save();
     
     let address = await createNewAddress(body);
 
