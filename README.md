@@ -22,3 +22,11 @@ Run `yarn dev` to start the development server
 ### Production
 
 Run `yarn build` to compile the typescript source code into javascript. The built files will be in the `build` folder
+
+### Available HTTP endpoints
+
+GET /address - Returns all available addresses
+POST /address - Creates new address
+GET /address/{id} - Returns specific address
+PATCH /address/{id} - Modifies specific address
+DELETE /address/{id} - Permanently removes specific address
